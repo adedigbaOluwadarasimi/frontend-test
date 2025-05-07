@@ -3,6 +3,7 @@ import React from 'react';
 import {
 	ChevronFirst,
 	Highlighter,
+	MessageSquareText,
 	NotebookPen,
 	Signature,
 	Underline,
@@ -76,6 +77,17 @@ export default function LeftSidebar() {
 					/>
 				}
 				title='Highlight'
+			/>
+
+			<MenuButton
+				icon={
+					<MessageSquareText
+						size={'1.5rem'}
+						strokeWidth={1.25}
+						style={{ width: '1.5rem', height: '1.5rem' }}
+					/>
+				}
+				title='Comment'
 			/>
 
 			<div className='mt-auto pb-4'>
