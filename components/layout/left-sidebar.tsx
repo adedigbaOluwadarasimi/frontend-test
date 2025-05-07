@@ -3,38 +3,68 @@ import React from 'react';
 import {
 	ChevronFirst,
 	Highlighter,
-	MessageSquareText,
 	NotebookPen,
-	Signature,
+	Puzzle,
 	Underline,
 } from 'lucide-react';
 import Tooltip from '@/components/common/tooltip';
 import { useViewerContext } from './context';
+import { LEFT_SIDEBAR_ENUMS } from '@/lib/enums';
 
 interface MenuButtonProps {
 	icon: React.ReactNode;
 	title?: string;
 	onClick?: () => void;
+	isActive?: boolean;
 }
 
-function MenuButton({ icon, title, onClick }: MenuButtonProps) {
+function MenuButton({ icon, title, onClick, isActive }: MenuButtonProps) {
 	return (
 		<button
 			className='cursor-pointer flex items-center flex-col group'
 			onClick={onClick}
 		>
-			<div className='group-hover:bg-[#e2e8ed] w-[40px] aspect-square flex items-center justify-center rounded-md'>
+			<div
+				className={`group-hover:bg-[#e2e8ed] w-[40px] aspect-square flex items-center justify-center rounded-md ${
+					isActive &&
+					'bg-[#c4f0fd] group-hover:bg-[#c4f0fd!important]'
+				}`}
+			>
 				{icon}
 			</div>
-			{title && <p className='text-sm'>{title}</p>}
+			{title && (
+				<p className={`text-sm ${isActive && 'text-[#087191]'}`}>
+					{title}
+				</p>
+			)}
 		</button>
 	);
 }
 
 export default function LeftSidebar() {
-	const { onFocusModeToggle, isFocusModeEnabled } = useViewerContext();
+	const {
+		onFocusModeToggle,
+		isFocusModeEnabled,
+		updateActiveSidebarBtn,
+		activeSidebarBtn,
+	} = useViewerContext();
 	return (
 		<div className='p-1 flex flex-col gap-4 items-center'>
+			<MenuButton
+				icon={
+					<Puzzle
+						size={'1.5rem'}
+						strokeWidth={1.25}
+						style={{ width: '1.5rem', height: '1.5rem' }}
+					/>
+				}
+				onClick={() =>
+					updateActiveSidebarBtn(LEFT_SIDEBAR_ENUMS.POPULAR)
+				}
+				title='Popular'
+				isActive={activeSidebarBtn === LEFT_SIDEBAR_ENUMS.POPULAR}
+			/>
+
 			<MenuButton
 				icon={
 					<NotebookPen
@@ -43,18 +73,11 @@ export default function LeftSidebar() {
 						style={{ width: '1.5rem', height: '1.5rem' }}
 					/>
 				}
-				title='Anotate'
-			/>
-
-			<MenuButton
-				icon={
-					<Signature
-						size={'1.5rem'}
-						strokeWidth={1.25}
-						style={{ width: '1.5rem', height: '1.5rem' }}
-					/>
+				onClick={() =>
+					updateActiveSidebarBtn(LEFT_SIDEBAR_ENUMS.ANOTATE)
 				}
-				title='Signnature'
+				title='Anotate'
+				isActive={activeSidebarBtn === LEFT_SIDEBAR_ENUMS.ANOTATE}
 			/>
 
 			<MenuButton
@@ -65,7 +88,11 @@ export default function LeftSidebar() {
 						style={{ width: '1.5rem', height: '1.5rem' }}
 					/>
 				}
+				onClick={() =>
+					updateActiveSidebarBtn(LEFT_SIDEBAR_ENUMS.UNDERLINE)
+				}
 				title='Underline'
+				isActive={activeSidebarBtn === LEFT_SIDEBAR_ENUMS.UNDERLINE}
 			/>
 
 			<MenuButton
@@ -76,18 +103,11 @@ export default function LeftSidebar() {
 						style={{ width: '1.5rem', height: '1.5rem' }}
 					/>
 				}
-				title='Highlight'
-			/>
-
-			<MenuButton
-				icon={
-					<MessageSquareText
-						size={'1.5rem'}
-						strokeWidth={1.25}
-						style={{ width: '1.5rem', height: '1.5rem' }}
-					/>
+				onClick={() =>
+					updateActiveSidebarBtn(LEFT_SIDEBAR_ENUMS.HIGHLIGHT)
 				}
-				title='Comment'
+				title='Highlight'
+				isActive={activeSidebarBtn === LEFT_SIDEBAR_ENUMS.HIGHLIGHT}
 			/>
 
 			<div className='mt-auto pb-4'>

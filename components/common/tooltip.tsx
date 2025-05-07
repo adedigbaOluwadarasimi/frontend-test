@@ -23,6 +23,7 @@ export default function Tooltip(props: TooltipProps) {
 				<TooltipContent
 					side={props?.side}
 					sideOffset={props?.sideOffset || 10}
+					className={props.content ? undefined : 'hidden'}
 				>
 					<p className='text-sm'>{props.content}</p>
 				</TooltipContent>

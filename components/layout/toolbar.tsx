@@ -1,14 +1,20 @@
 'use client';
-import React from 'react';
+import React, { ReactNode } from 'react';
 import Tooltip from '../common/tooltip';
 import IconButton from '../common/icon-button';
 import {
-	ChevronDown,
+	Eraser,
 	Hand,
+	Highlighter,
+	MessageSquareText,
 	MousePointer2,
+	PenTool,
 	Redo2,
 	RedoDot,
+	Signature,
 	StickyNote,
+	Type,
+	Underline,
 	Undo2,
 	UndoDot,
 	ZoomIn,
@@ -16,33 +22,185 @@ import {
 } from 'lucide-react';
 import { useViewerContext } from './context';
 import { Separator } from '../ui/separator';
+import MultiSelector from '../common/multi-selector';
+import { LEFT_SIDEBAR_ENUMS, TOOLBAR_BTNS } from '@/lib/enums';
+import DropdownSelector from '../common/dropdown-selector';
 
 export default function ToolBar() {
-	const { onFutureFeatClick } = useViewerContext();
+	const {
+		onFutureFeatClick,
+		activeToolbarBtn,
+		updateActiveToolbarBtn,
+		activeSidebarBtn,
+	} = useViewerContext();
+
+	const toolbarGroups: Partial<Record<LEFT_SIDEBAR_ENUMS, ReactNode>> = {
+		[LEFT_SIDEBAR_ENUMS.ANOTATE]: (
+			<>
+				<MultiSelector
+					tooltip={{
+						buttonTooltipContent: 'Erase',
+						side: 'bottom',
+					}}
+					dropdown={{ align: 'end', side: 'bottom' }}
+					dropdowncontent={
+						<div>
+							<p>Coming soon!</p>
+						</div>
+					}
+					onClick={() => updateActiveToolbarBtn(TOOLBAR_BTNS.ERASE)}
+					isActive={activeToolbarBtn === TOOLBAR_BTNS.ERASE}
+				>
+					<div className='flex items-center gap-2'>
+						<Eraser
+							strokeWidth={1.5}
+							style={{ width: '1.5rem', height: '1.5rem' }}
+							color='#325167'
+						/>
+
+						<p className='text-sm pr-1'>Eraser</p>
+					</div>
+				</MultiSelector>
+				<MultiSelector
+					tooltip={{
+						buttonTooltipContent: 'Type',
+						side: 'bottom',
+					}}
+					dropdown={{ align: 'end', side: 'bottom' }}
+					dropdowncontent={
+						<div>
+							<p>Coming soon!</p>
+						</div>
+					}
+					onClick={() => updateActiveToolbarBtn(TOOLBAR_BTNS.TYPE)}
+					isActive={activeToolbarBtn === TOOLBAR_BTNS.TYPE}
+				>
+					<div className='flex items-center gap-2'>
+						<Type
+							strokeWidth={1.5}
+							style={{ width: '1.5rem', height: '1.5rem' }}
+							color='#325167'
+						/>
+
+						<p className='text-sm pr-1'>Type</p>
+					</div>
+				</MultiSelector>
+
+				<MultiSelector
+					tooltip={{
+						buttonTooltipContent: 'Draw',
+						side: 'bottom',
+					}}
+					dropdown={{ align: 'end', side: 'bottom' }}
+					dropdowncontent={
+						<div>
+							<p>Coming soon!</p>
+						</div>
+					}
+					onClick={() => updateActiveToolbarBtn(TOOLBAR_BTNS.DRAW)}
+					isActive={activeToolbarBtn === TOOLBAR_BTNS.DRAW}
+				>
+					<div className='flex items-center gap-2'>
+						<PenTool
+							strokeWidth={1.5}
+							style={{ width: '1.5rem', height: '1.5rem' }}
+							color='#325167'
+						/>
+
+						<p className='text-sm pr-1'>Draw</p>
+					</div>
+				</MultiSelector>
+			</>
+		),
+
+		[LEFT_SIDEBAR_ENUMS.HIGHLIGHT]: (
+			<>
+				<MultiSelector
+					tooltip={{
+						buttonTooltipContent: 'Highlight',
+						side: 'bottom',
+					}}
+					dropdown={{ align: 'end', side: 'bottom' }}
+					dropdowncontent={
+						<div>
+							<p>Coming soon!</p>
+						</div>
+					}
+					onClick={() =>
+						updateActiveToolbarBtn(TOOLBAR_BTNS.HIGHLIGHT)
+					}
+					isActive={activeToolbarBtn === TOOLBAR_BTNS.HIGHLIGHT}
+				>
+					<div className='flex items-center gap-2'>
+						<Highlighter
+							strokeWidth={1.5}
+							style={{ width: '1.5rem', height: '1.5rem' }}
+							color='#325167'
+						/>
+
+						<p className='text-sm pr-1'>Highlight</p>
+					</div>
+				</MultiSelector>
+			</>
+		),
+
+		[LEFT_SIDEBAR_ENUMS.UNDERLINE]: (
+			<>
+				<MultiSelector
+					tooltip={{
+						buttonTooltipContent: 'Erase',
+						side: 'bottom',
+					}}
+					dropdown={{ align: 'end', side: 'bottom' }}
+					dropdowncontent={
+						<div>
+							<p>Coming soon!</p>
+						</div>
+					}
+					onClick={() =>
+						updateActiveToolbarBtn(TOOLBAR_BTNS.UNDERLINE)
+					}
+					isActive={activeToolbarBtn === TOOLBAR_BTNS.UNDERLINE}
+				>
+					<div className='flex items-center gap-2'>
+						<Underline
+							strokeWidth={1.5}
+							style={{ width: '1.5rem', height: '1.5rem' }}
+							color='#325167'
+						/>
+
+						<p className='text-sm pr-1'>Underline</p>
+					</div>
+				</MultiSelector>
+			</>
+		),
+	};
+
 	return (
 		<div className='h-[48px] p-[8px] flex items-center justify-between'>
 			<div className='flex items-center gap-0.5'>
-				<Tooltip
-					content='Thumbnails'
-					side='bottom'
-					sideOffset={10}
-				>
-					<IconButton
-						onClick={onFutureFeatClick}
-						className='p-2 hover:bg-[#dae1e8]'
-						style={{ aspectRatio: 'auto' }}
-					>
-						<div className='flex items-center gap-1'>
-							<StickyNote
-								strokeWidth={1.25}
-								style={{ width: '1.5rem', height: '1.5rem' }}
-								color='#325167'
-							/>
-
-							<ChevronDown />
+				<MultiSelector
+					tooltip={{
+						buttonTooltipContent: 'Thumbnails',
+						side: 'bottom',
+					}}
+					dropdown={{ align: 'start', side: 'bottom' }}
+					dropdowncontent={
+						<div>
+							<p>Coming soon!</p>
 						</div>
-					</IconButton>
-				</Tooltip>
+					}
+					onClick={() =>
+						updateActiveToolbarBtn(TOOLBAR_BTNS.THUMBNAILS)
+					}
+					isActive={activeToolbarBtn === TOOLBAR_BTNS.THUMBNAILS}
+				>
+					<StickyNote
+						strokeWidth={1.5}
+						style={{ width: '1.5rem', height: '1.5rem' }}
+						color='#325167'
+					/>
+				</MultiSelector>
 
 				<Separator
 					className='bg-[#a5b5c1] min-h-[15px] mx-2'
@@ -59,7 +217,7 @@ export default function ToolBar() {
 						className='p-2 hover:bg-[#dae1e8]'
 					>
 						<ZoomOut
-							strokeWidth={1.25}
+							strokeWidth={1.5}
 							style={{ width: '1.5rem', height: '1.5rem' }}
 							color='#325167'
 						/>
@@ -76,7 +234,7 @@ export default function ToolBar() {
 						className='p-2 hover:bg-[#dae1e8]'
 					>
 						<ZoomIn
-							strokeWidth={1.25}
+							strokeWidth={1.5}
 							style={{ width: '1.5rem', height: '1.5rem' }}
 							color='#325167'
 						/>
@@ -93,7 +251,7 @@ export default function ToolBar() {
 						className='p-2 hover:bg-[#dae1e8]'
 					>
 						<UndoDot
-							strokeWidth={1.25}
+							strokeWidth={1.5}
 							style={{ width: '1.5rem', height: '1.5rem' }}
 							color='#325167'
 						/>
@@ -110,7 +268,7 @@ export default function ToolBar() {
 						className='p-2 hover:bg-[#dae1e8]'
 					>
 						<RedoDot
-							strokeWidth={1.25}
+							strokeWidth={1.5}
 							style={{ width: '1.5rem', height: '1.5rem' }}
 							color='#325167'
 						/>
@@ -132,7 +290,7 @@ export default function ToolBar() {
 						className='p-2 hover:bg-[#dae1e8]'
 					>
 						<MousePointer2
-							strokeWidth={1.25}
+							strokeWidth={1.5}
 							style={{ width: '1.5rem', height: '1.5rem' }}
 							color='#325167'
 						/>
@@ -149,7 +307,7 @@ export default function ToolBar() {
 						className='p-2 hover:bg-[#dae1e8]'
 					>
 						<Hand
-							strokeWidth={1.25}
+							strokeWidth={1.5}
 							style={{ width: '1.5rem', height: '1.5rem' }}
 							color='#325167'
 						/>
@@ -172,7 +330,7 @@ export default function ToolBar() {
 						className='p-1 hover:bg-[#dae1e8]'
 					>
 						<Undo2
-							strokeWidth={1.25}
+							strokeWidth={1.5}
 							style={{ width: '1.5rem', height: '1.5rem' }}
 							color='#325167'
 						/>
@@ -190,7 +348,7 @@ export default function ToolBar() {
 						className='p-1 hover:bg-[#dae1e8]'
 					>
 						<Redo2
-							strokeWidth={1.25}
+							strokeWidth={1.55}
 							style={{ width: '1.5rem', height: '1.5rem' }}
 							color='#325167'
 						/>
@@ -198,8 +356,72 @@ export default function ToolBar() {
 				</Tooltip>
 			</div>
 
-			<div>
-				<p>Selected toolbar</p>
+			<div className='flex items-center gap-0.5'>
+				{activeSidebarBtn === LEFT_SIDEBAR_ENUMS.POPULAR ? (
+					<>{...Object.values(toolbarGroups)}</>
+				) : (
+					toolbarGroups[activeSidebarBtn]
+				)}
+
+				<Separator
+					className='bg-[#a5b5c1] min-h-[15px] mx-2'
+					orientation='vertical'
+				/>
+
+				<MultiSelector
+					tooltip={{
+						buttonTooltipContent: 'Add comments',
+						side: 'bottom',
+					}}
+					dropdown={{ align: 'end', side: 'bottom' }}
+					dropdowncontent={
+						<div>
+							<p>Coming soon!</p>
+						</div>
+					}
+					onClick={() => updateActiveToolbarBtn(TOOLBAR_BTNS.COMMENT)}
+					isActive={activeToolbarBtn === TOOLBAR_BTNS.COMMENT}
+				>
+					<div className='flex items-center gap-2'>
+						<MessageSquareText
+							strokeWidth={1.5}
+							style={{ width: '1.5rem', height: '1.5rem' }}
+							color='#325167'
+						/>
+
+						<p className='text-sm pr-1'>Add Comment</p>
+					</div>
+				</MultiSelector>
+
+				<Separator
+					className='bg-[#a5b5c1] min-h-[15px] mx-2'
+					orientation='vertical'
+				/>
+
+				<DropdownSelector
+					tooltip={{
+						buttonTooltipContent: 'Signature',
+						side: 'bottom',
+					}}
+					dropdown={{ align: 'end', side: 'bottom' }}
+					dropdowncontent={
+						<div>
+							<p>Coming soon!</p>
+						</div>
+					}
+					onClick={() => updateActiveToolbarBtn(TOOLBAR_BTNS.SIGN)}
+					isActive={activeToolbarBtn === TOOLBAR_BTNS.SIGN}
+				>
+					<div className='flex items-center gap-2'>
+						<Signature
+							strokeWidth={1.5}
+							style={{ width: '1.5rem', height: '1.5rem' }}
+							color='#325167'
+						/>
+
+						<p className='text-sm pr-1'>Signature</p>
+					</div>
+				</DropdownSelector>
 			</div>
 		</div>
 	);
