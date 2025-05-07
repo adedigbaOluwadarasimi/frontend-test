@@ -19,7 +19,23 @@ export const metadata: Metadata = {
 	description:
 		'Slick, fast, and drama-free PDF editing—because life’s too short for clunky tools.',
 	icons: {
-		icon: 'https://pdf-editor-lite.vercel.app/logo.svg',
+		icon: 'https://pdf-editor-lite.vercel.app/logo.png',
+	},
+	openGraph: {
+		title: 'PDF Editor Lite',
+		description:
+			'Slick, fast, and drama-free PDF editing—because life’s too short for clunky tools.',
+		url: 'https://pdf-editor-lite.vercel.app',
+		siteName: 'PDF Editor Lite',
+		images: [
+			{
+				url: 'https://pdf-editor-lite.vercel.app/logo.png',
+				width: 1200,
+				height: 630,
+				alt: 'PDF Editor Lite Logo',
+			},
+		],
+		type: 'website',
 	},
 };
 
