@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { Inter, Nunito } from 'next/font/google';
 import './globals.css';
+import { Toaster } from '@/components/core/toaster';
 
 const inter = Inter({
 	variable: '--font-inter',
@@ -28,6 +29,7 @@ export default function RootLayout({
 				className={`${inter.variable} ${nunito.variable} antialiased`}
 			>
 				{children}
+				<Toaster position='bottom-right' />
 			</body>
 		</html>
 	);

@@ -1,10 +1,13 @@
+'use client';
 import IconButton from '@/components/common/icon-button';
 import React from 'react';
 import { Download, Printer, Search } from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
 import Tooltip from '@/components/common/tooltip';
+import { useViewerContext } from './context';
 
 export default function RightSidebar() {
+	const { onDocumentDownload, onDocumentPrint } = useViewerContext();
 	return (
 		<div className='p-1 flex flex-col gap-3'>
 			<Tooltip
@@ -28,7 +31,7 @@ export default function RightSidebar() {
 				side='left'
 				sideOffset={10}
 			>
-				<IconButton>
+				<IconButton onClick={onDocumentDownload}>
 					<Download
 						strokeWidth={1.25}
 						style={{ width: '1.5rem', height: '1.5rem' }}
@@ -41,7 +44,7 @@ export default function RightSidebar() {
 				side='left'
 				sideOffset={10}
 			>
-				<IconButton>
+				<IconButton onClick={onDocumentPrint}>
 					<Printer
 						strokeWidth={1.25}
 						style={{ width: '1.5rem', height: '1.5rem' }}
