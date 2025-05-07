@@ -9,6 +9,7 @@ export interface ViewerContextValue {
 	onDocumentUpload: () => void;
 	onFocusModeToggle: () => void;
 	onDocumentPrint: () => void;
+	onFutureFeatClick: () => void;
 }
 
 export const ViewerContext = React.createContext<ViewerContextValue>({
@@ -17,6 +18,7 @@ export const ViewerContext = React.createContext<ViewerContextValue>({
 	onDocumentUpload: () => {},
 	onFocusModeToggle: () => {},
 	onDocumentPrint: () => {},
+	onFutureFeatClick: () => {},
 });
 
 interface ViewerContextProviderProps {
@@ -41,6 +43,10 @@ export default function ViewerContextProvider({
 		toast.info('Document print initiated');
 	};
 
+	const onFutureFeatClick = () => {
+		toast.info("📦 This one's still in the box. Stay tuned!");
+	};
+
 	const onFocusModeToggle = () => {
 		setIsFocusModeEnabled((prev) => !prev);
 		toast.info(`Focus mode turned ${isFocusModeEnabled ? 'on' : 'off'}`);
@@ -53,6 +59,7 @@ export default function ViewerContextProvider({
 				onDocumentUpload,
 				onFocusModeToggle,
 				onDocumentPrint,
+				onFutureFeatClick,
 			}}
 		>
 			{children}

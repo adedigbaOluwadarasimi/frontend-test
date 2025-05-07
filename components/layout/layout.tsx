@@ -3,7 +3,7 @@ import React from 'react';
 import Header from './header';
 import LeftSidebar from './left-sidebar';
 import RightSidebar from './right-sidebar';
-import ToolBar from './tool-bar';
+import ToolBar from './toolbar';
 import ViewerContextProvider from './context';
 
 export default function ViewerLayout({ children }: LayoutProps) {
