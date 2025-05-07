@@ -20,7 +20,7 @@ export default function Header() {
 					className='text-2xl font-semibold leading-normal'
 					style={{ fontFamily: 'var(--font-nunito)' }}
 				>
-					pdf editor
+					pdf editor lite
 				</p>
 			</div>
 
