@@ -1,8 +1,9 @@
+/* eslint-disable @next/next/no-img-element */
 import Avatar from '@/components/common/avatar';
 import Tooltip from '@/components/common/tooltip';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
-import { Bell, Menu } from 'lucide-react';
+import { Bell } from 'lucide-react';
 import React from 'react';
 
 export default function Header() {
