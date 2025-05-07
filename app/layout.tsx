@@ -19,7 +19,7 @@ export const metadata: Metadata = {
 	description:
 		'Slick, fast, and drama-free PDF editing—because life’s too short for clunky tools.',
 	icons: {
-		icon: '/logo.svg',
+		icon: 'https://pdf-editor-lite.vercel.app/logo.svg',
 	},
 };
 
