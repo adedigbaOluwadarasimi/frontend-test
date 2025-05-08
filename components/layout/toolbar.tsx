@@ -32,6 +32,16 @@ export default function ToolBar() {
 		activeToolbarBtn,
 		updateActiveToolbarBtn,
 		activeSidebarBtn,
+		updateCanvasScale,
+		canvasScale,
+		cursorMode,
+		updateCursorMode,
+		updateDocumentProps,
+		documentProps,
+		undo,
+		redo,
+		canRedo,
+		canUndo,
 	} = useViewerContext();
 
 	const toolbarGroups: Partial<Record<LEFT_SIDEBAR_ENUMS, ReactNode>> = {
@@ -190,9 +200,10 @@ export default function ToolBar() {
 							<p>Coming soon!</p>
 						</div>
 					}
-					onClick={() =>
-						updateActiveToolbarBtn(TOOLBAR_BTNS.THUMBNAILS)
-					}
+					onClick={() => {
+						// updateActiveToolbarBtn(TOOLBAR_BTNS.THUMBNAILS);
+						onFutureFeatClick();
+					}}
 					isActive={activeToolbarBtn === TOOLBAR_BTNS.THUMBNAILS}
 				>
 					<StickyNote
@@ -213,7 +224,8 @@ export default function ToolBar() {
 					sideOffset={10}
 				>
 					<IconButton
-						onClick={onFutureFeatClick}
+						disabled={canvasScale <= 0.3}
+						onClick={() => updateCanvasScale(canvasScale / 1.2)}
 						className='p-2 hover:bg-[#dae1e8]'
 					>
 						<ZoomOut
@@ -230,7 +242,8 @@ export default function ToolBar() {
 					sideOffset={10}
 				>
 					<IconButton
-						onClick={onFutureFeatClick}
+						disabled={canvasScale >= 3}
+						onClick={() => updateCanvasScale(canvasScale * 1.2)}
 						className='p-2 hover:bg-[#dae1e8]'
 					>
 						<ZoomIn
@@ -247,7 +260,13 @@ export default function ToolBar() {
 					sideOffset={10}
 				>
 					<IconButton
-						onClick={onFutureFeatClick}
+						disabled={documentProps.rotate <= -270}
+						onClick={() =>
+							updateDocumentProps((prev) => ({
+								...prev,
+								rotate: prev.rotate - 90,
+							}))
+						}
 						className='p-2 hover:bg-[#dae1e8]'
 					>
 						<UndoDot
@@ -264,7 +283,13 @@ export default function ToolBar() {
 					sideOffset={10}
 				>
 					<IconButton
-						onClick={onFutureFeatClick}
+						disabled={documentProps.rotate >= 270}
+						onClick={() =>
+							updateDocumentProps((prev) => ({
+								...prev,
+								rotate: prev.rotate + 90,
+							}))
+						}
 						className='p-2 hover:bg-[#dae1e8]'
 					>
 						<RedoDot
@@ -286,8 +311,11 @@ export default function ToolBar() {
 					sideOffset={10}
 				>
 					<IconButton
-						onClick={onFutureFeatClick}
-						className='p-2 hover:bg-[#dae1e8]'
+						onClick={() => updateCursorMode('cursor')}
+						className={`p-2 hover:bg-[#dae1e8] ${
+							cursorMode === 'cursor' &&
+							'hover:bg-[#d0e6f2!important] bg-[#d0e6f2]'
+						}`}
 					>
 						<MousePointer2
 							strokeWidth={1.5}
@@ -303,8 +331,11 @@ export default function ToolBar() {
 					sideOffset={10}
 				>
 					<IconButton
-						onClick={onFutureFeatClick}
-						className='p-2 hover:bg-[#dae1e8]'
+						onClick={() => updateCursorMode('pan')}
+						className={`p-2 hover:bg-[#dae1e8] ${
+							cursorMode === 'pan' &&
+							'hover:bg-[#d0e6f2!important] bg-[#d0e6f2]'
+						}`}
 					>
 						<Hand
 							strokeWidth={1.5}
@@ -325,8 +356,8 @@ export default function ToolBar() {
 					sideOffset={10}
 				>
 					<IconButton
-						onClick={onFutureFeatClick}
-						disabled
+						onClick={undo}
+						disabled={!canUndo}
 						className='p-1 hover:bg-[#dae1e8]'
 					>
 						<Undo2
@@ -343,8 +374,8 @@ export default function ToolBar() {
 					sideOffset={10}
 				>
 					<IconButton
-						onClick={onFutureFeatClick}
-						disabled
+						onClick={redo}
+						disabled={!canRedo}
 						className='p-1 hover:bg-[#dae1e8]'
 					>
 						<Redo2

@@ -1,5 +1,5 @@
 'use client';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useViewerContext } from './context';
 import Tooltip from '../common/tooltip';
 import IconButton from '../common/icon-button';
@@ -12,11 +12,32 @@ import {
 	ZoomOut,
 } from 'lucide-react';
 import { Separator } from '../ui/separator';
+import { DOCUMENT_UPLOAD_STATUS } from '@/lib/enums';
 
 export default function FloatingToolbar() {
-	const { onFutureFeatClick } = useViewerContext();
+	const {
+		updateCanvasScale,
+		canvasScale,
+		documentUploadStatus,
+		pageCount,
+		updateCurrentPage,
+		currentPage,
+	} = useViewerContext();
+
+	const [zoomValue, setZoomValue] = useState(
+		`${Math.floor(canvasScale * 100)}%`
+	);
+	const [currentPageValue, setCurrentPageValue] = useState(`${currentPage}`);
+
+	useEffect(() => {
+		setZoomValue(`${Math.floor(canvasScale * 100)}%`);
+	}, [canvasScale]);
+
+	useEffect(() => {
+		setCurrentPageValue(`${Math.floor(currentPage)}`);
+	}, [currentPage]);
 	return (
-		<div className='px-2 py-2 absolute flex items-center bottom-5 left-1/2 -translate-x-1/2 bg-[#fff] shadow-lg rounded-md border border-[0.5px] border-black/10 bg-white/30 backdrop-blur-md'>
+		<div className='px-2 py-2 absolute flex items-center z-[4000] bottom-5 left-1/2 -translate-x-1/2 bg-[#fff] shadow-lg rounded-md border border-[0.5px] border-black/10 bg-white/80 backdrop-blur-md'>
 			<div className='flex items-center gap-0.5'>
 				<Tooltip
 					content='Zoom out'
@@ -24,7 +45,8 @@ export default function FloatingToolbar() {
 					sideOffset={10}
 				>
 					<IconButton
-						onClick={onFutureFeatClick}
+						disabled={canvasScale <= 0.3}
+						onClick={() => updateCanvasScale(canvasScale / 1.2)}
 						className='p-2 hover:bg-[#dae1e8]'
 					>
 						<ZoomOut
@@ -35,13 +57,51 @@ export default function FloatingToolbar() {
 					</IconButton>
 				</Tooltip>
 
+				<form
+					onSubmit={(e) => {
+						e.preventDefault();
+
+						if (
+							documentUploadStatus !==
+							DOCUMENT_UPLOAD_STATUS.LOADED_IN_EDITOR
+						)
+							return;
+
+						const formattedFormValue = parseInt(
+							zoomValue.replaceAll(/\D/g, '')
+						);
+
+						if (
+							30 <= formattedFormValue &&
+							formattedFormValue <= 350
+						) {
+							setZoomValue(`${formattedFormValue}%`);
+							updateCanvasScale(formattedFormValue / 100);
+						} else
+							setZoomValue(`${Math.floor(canvasScale * 100)}%`);
+					}}
+				>
+					<input
+						className='w-[48px] h-[35px] outline-none border border-black/20 text-center text-sm font-medium rounded-sm p-0.5 mx-1.5'
+						onChange={(e) => {
+							setZoomValue(e?.target?.value);
+						}}
+						value={`${zoomValue}`}
+						readOnly={
+							documentUploadStatus !==
+							DOCUMENT_UPLOAD_STATUS.LOADED_IN_EDITOR
+						}
+					/>
+				</form>
+
 				<Tooltip
 					content='Zoom in'
 					side='top'
 					sideOffset={10}
 				>
 					<IconButton
-						onClick={onFutureFeatClick}
+						disabled={canvasScale >= 3}
+						onClick={() => updateCanvasScale(canvasScale * 1.2)}
 						className='p-2 hover:bg-[#dae1e8]'
 					>
 						<ZoomIn
@@ -58,7 +118,8 @@ export default function FloatingToolbar() {
 				/>
 
 				<IconButton
-					onClick={onFutureFeatClick}
+					disabled={currentPage === 1}
+					onClick={() => updateCurrentPage(1)}
 					className='p-2 hover:bg-[#dae1e8]'
 				>
 					<ChevronsLeft
@@ -69,7 +130,8 @@ export default function FloatingToolbar() {
 				</IconButton>
 
 				<IconButton
-					onClick={onFutureFeatClick}
+					disabled={currentPage === 1}
+					onClick={() => updateCurrentPage(currentPage - 1)}
 					className='p-2 hover:bg-[#dae1e8]'
 				>
 					<ChevronLeft
@@ -79,8 +141,49 @@ export default function FloatingToolbar() {
 					/>
 				</IconButton>
 
+				<form
+					className='flex items-center'
+					onSubmit={(e) => {
+						e.preventDefault();
+
+						if (
+							documentUploadStatus !==
+							DOCUMENT_UPLOAD_STATUS.LOADED_IN_EDITOR
+						)
+							return;
+
+						const formattedFormValue = parseInt(
+							currentPageValue.replaceAll(/\D/g, '')
+						);
+
+						if (
+							!!formattedFormValue &&
+							formattedFormValue <= pageCount
+						) {
+							setCurrentPageValue(`${formattedFormValue}`);
+							updateCurrentPage(formattedFormValue);
+						} else
+							setCurrentPageValue(`${Math.floor(currentPage)}`);
+					}}
+				>
+					<input
+						className='w-[32px] h-[28px] outline-none border border-black/20 text-center text-sm font-medium rounded-sm p-0.5 mx-1.5'
+						onChange={(e) => {
+							setCurrentPageValue(e?.target?.value);
+						}}
+						value={currentPageValue}
+						readOnly={
+							documentUploadStatus !==
+							DOCUMENT_UPLOAD_STATUS.LOADED_IN_EDITOR
+						}
+					/>
+					<p className='mx-1.5 text-sm'>/</p>
+					<p className='text-sm ml-1 mr-1.5'>{pageCount}</p>
+				</form>
+
 				<IconButton
-					onClick={onFutureFeatClick}
+					disabled={currentPage === pageCount}
+					onClick={() => updateCurrentPage(currentPage + 1)}
 					className='p-2 hover:bg-[#dae1e8]'
 				>
 					<ChevronRight
@@ -91,7 +194,8 @@ export default function FloatingToolbar() {
 				</IconButton>
 
 				<IconButton
-					onClick={onFutureFeatClick}
+					disabled={currentPage === pageCount}
+					onClick={() => updateCurrentPage(pageCount)}
 					className='p-2 hover:bg-[#dae1e8]'
 				>
 					<ChevronsRight

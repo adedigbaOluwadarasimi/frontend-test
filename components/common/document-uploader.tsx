@@ -9,7 +9,7 @@ import { DOCUMENT_UPLOAD_STATUS } from '@/lib/enums';
 import { ClipLoader } from 'react-spinners';
 import { useViewerContext } from '../layout/context';
 import { toast } from 'sonner';
-import { AnimatePresence, motion } from 'motion/react';
+import { motion } from 'motion/react';
 
 const useAnimatedDots = (maxDots = 3, interval = 500) => {
 	const [dotCount, setDotCount] = useState(1);
@@ -248,9 +248,20 @@ const OnUploadDisplay = () => {
 };
 
 const OnSuccessDisplay = () => {
+	const { updateDocumentUploadStatus } = useViewerContext();
+
+	useEffect(() => {
+		setTimeout(
+			() =>
+				updateDocumentUploadStatus(
+					DOCUMENT_UPLOAD_STATUS.LOADED_IN_EDITOR
+				),
+			1500
+		);
+	}, [updateDocumentUploadStatus]);
 	return (
 		<motion.div
-			key='onUploadDisplay'
+			key='onSuccessDisplay'
 			initial={{ opacity: 0, y: 20 }}
 			animate={{ opacity: 1, y: 0 }}
 			exit={{ opacity: 0, y: 20 }}
@@ -292,7 +303,7 @@ const OnSuccessDisplay = () => {
 const OnErrorDisplay = () => {
 	return (
 		<motion.div
-			key='onUploadDisplay'
+			key='onErrorDisplay'
 			initial={{ opacity: 0, y: 20 }}
 			animate={{ opacity: 1, y: 0 }}
 			exit={{ opacity: 0, y: 20 }}
@@ -338,9 +349,5 @@ const documentUploadDisplays: Partial<
 
 export default function DocumentUploader() {
 	const { documentUploadStatus } = useViewerContext();
-	return (
-		<AnimatePresence>
-			{documentUploadDisplays[documentUploadStatus]}
-		</AnimatePresence>
-	);
+	return documentUploadDisplays[documentUploadStatus];
 }
