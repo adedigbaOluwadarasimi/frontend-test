@@ -16,3 +16,10 @@ export enum LEFT_SIDEBAR_ENUMS {
 	UNDERLINE = 3,
 	HIGHLIGHT = 4,
 }
+
+export enum DOCUMENT_UPLOAD_STATUS {
+	PRE_UPLOAD = 1,
+	UPLOADING = 2,
+	SUCCESS = 3,
+	ERROR = 4,
+}
