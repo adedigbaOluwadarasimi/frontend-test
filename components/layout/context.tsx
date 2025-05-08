@@ -7,7 +7,8 @@ import {
 	LEFT_SIDEBAR_ENUMS,
 	TOOLBAR_BTNS,
 } from '@/lib/enums';
-import useHistory from '../core/use-history';
+import useHistory from '../../hooks/use-history';
+import useKeyboardShortcuts from '@/hooks/use-keyboard-shortcuts';
 
 export type cursorMode = 'pan' | 'cursor' | 'grabbing';
 
@@ -167,9 +168,7 @@ export default function ViewerContextProvider({
 
 	const updateCanvasScale = (newScale: number) => {
 		if (documentUploadStatus !== DOCUMENT_UPLOAD_STATUS.LOADED_IN_EDITOR)
-			return toast.error(
-				'Oops! You gotta be in editor mode to use this.'
-			);
+			return toast.error('Upload a document to contine!');
 		setCanvasScale(newScale);
 	};
 
@@ -178,25 +177,19 @@ export default function ViewerContextProvider({
 			newMode === 'pan' &&
 			documentUploadStatus !== DOCUMENT_UPLOAD_STATUS.LOADED_IN_EDITOR
 		)
-			return toast.error(
-				'Oops! You gotta be in editor mode to use this.'
-			);
+			return toast.error('Upload a document to contine!');
 		setCursorMode(newMode);
 	};
 
 	const updateCurrentPage = (newPage: number) => {
 		if (documentUploadStatus !== DOCUMENT_UPLOAD_STATUS.LOADED_IN_EDITOR)
-			return toast.error(
-				'Oops! You gotta be in editor mode to use this.'
-			);
+			return toast.error('Upload a document to contine!');
 		setCurrentPage(newPage);
 	};
 
 	const updatePageCount = (param: number) => {
 		if (documentUploadStatus !== DOCUMENT_UPLOAD_STATUS.LOADED_IN_EDITOR)
-			return toast.error(
-				'Oops! You gotta be in editor mode to use this.'
-			);
+			return toast.error('Upload a document to contine!');
 		setPageCount(param);
 	};
 
@@ -207,9 +200,7 @@ export default function ViewerContextProvider({
 		) => documentProps | documentProps
 	) => {
 		if (documentUploadStatus !== DOCUMENT_UPLOAD_STATUS.LOADED_IN_EDITOR)
-			return toast.error(
-				'Oops! You gotta be in editor mode to use this.'
-			);
+			return toast.error('Upload a document to contine!');
 
 		setDocumentProps(
 			typeof payload === 'function'
@@ -220,21 +211,24 @@ export default function ViewerContextProvider({
 
 	const undo = () => {
 		if (documentUploadStatus !== DOCUMENT_UPLOAD_STATUS.LOADED_IN_EDITOR)
-			return toast.error(
-				'Oops! You gotta be in editor mode to use this.'
-			);
+			return toast.error('Upload a document to contine!');
 
 		undoDocumentPropsUpdate();
 	};
 
 	const redo = () => {
 		if (documentUploadStatus !== DOCUMENT_UPLOAD_STATUS.LOADED_IN_EDITOR)
-			return toast.error(
-				'Oops! You gotta be in editor mode to use this.'
-			);
+			return toast.error('Upload a document to contine!');
 
 		redoDocumentPropsUpdate();
 	};
+
+	useKeyboardShortcuts({
+		undo: undoDocumentPropsUpdate,
+		redo: redoDocumentPropsUpdate,
+		isEditorModeActive:
+			documentUploadStatus === DOCUMENT_UPLOAD_STATUS.LOADED_IN_EDITOR,
+	});
 
 	return (
 		<ViewerContext.Provider
