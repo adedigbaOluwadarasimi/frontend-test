@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import 'react-pdf/dist/esm/Page/AnnotationLayer.css';
 import { useViewerContext } from '../layout/context';
 import { motion } from 'motion/react';
@@ -15,6 +15,7 @@ import {
 	ScaledPosition,
 	NewHighlight,
 	Highlight,
+	IHighlight,
 } from 'react-pdf-highlighter';
 
 import 'react-pdf-highlighter/dist/style.css';
@@ -30,6 +31,13 @@ import { Button } from '../ui/button';
 
 const getNextId = () => String(Math.random()).slice(2);
 
+const parseIdFromHash = () =>
+	document.location.hash.slice('#highlight-'.length);
+
+const resetHash = () => {
+	document.location.hash = '';
+};
+
 export function PdfViewer() {
 	const {
 		documentUploadStatus,
@@ -43,9 +51,30 @@ export function PdfViewer() {
 	} = useViewerContext();
 
 	const url = useMemo(() => (file ? URL.createObjectURL(file) : ''), [file]);
+	const scrollViewerTo = useRef((highlight: IHighlight) => {
+		console.log(highlight.id);
+	});
+
 	const [isCommentModalOpen, setIsCommentModalOpen] = useState(false);
 	const [incompleteHighlightProps, setIncompleteHighlightProps] =
 		useState<NewHighlight | null>(null);
+
+	const getHighlightById = useCallback(
+		(id: string) => {
+			return documentProps.highlights.find(
+				(highlight) => highlight.id === id
+			);
+		},
+		[documentProps.highlights]
+	);
+
+	const scrollToHighlightFromHash = useCallback(() => {
+		const highlight = getHighlightById(parseIdFromHash());
+		if (highlight) {
+			console.log('Tried scrolling');
+			scrollViewerTo.current(highlight);
+		}
+	}, [getHighlightById]);
 
 	const addHighlight = (highlight: any) => {
 		updateDocumentProps((prev) => ({
@@ -319,6 +348,17 @@ export function PdfViewer() {
 		};
 	}, [documentUploadStatus, updateCanvasScale, cursorMode]);
 
+	useEffect(() => {
+		window.addEventListener('hashchange', scrollToHighlightFromHash, false);
+		return () => {
+			window.removeEventListener(
+				'hashchange',
+				scrollToHighlightFromHash,
+				false
+			);
+		};
+	}, [scrollToHighlightFromHash]);
+
 	if (documentUploadStatus === DOCUMENT_UPLOAD_STATUS.LOADED_IN_EDITOR)
 		return (
 			<div className='w-full flex h-full bg-[transparent]'>
@@ -363,10 +403,10 @@ export function PdfViewer() {
 									enableAreaSelection={(event) =>
 										event.altKey
 									}
-									onScrollChange={() => null}
-									scrollRef={() => {
-										// scrollViewerTo.current = scrollTo;
-										// scrollToHighlightFromHash();
+									onScrollChange={() => resetHash()}
+									scrollRef={(scrollTo) => {
+										scrollViewerTo.current = scrollTo;
+										scrollToHighlightFromHash();
 									}}
 									onSelectionFinished={
 										handleSelectionFinished

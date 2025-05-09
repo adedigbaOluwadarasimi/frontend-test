@@ -25,6 +25,7 @@ import { Separator } from '../ui/separator';
 import MultiSelector from '../common/multi-selector';
 import { LEFT_SIDEBAR_ENUMS, TOOLBAR_BTNS } from '@/lib/enums';
 import DropdownSelector from '../common/dropdown-selector';
+import CommentViewer from '../core/comment-viewer';
 
 export default function ToolBar() {
 	const {
@@ -392,11 +393,7 @@ export default function ToolBar() {
 						side: 'bottom',
 					}}
 					dropdown={{ align: 'end', side: 'bottom' }}
-					dropdowncontent={
-						<div>
-							<p>Coming soon!</p>
-						</div>
-					}
+					dropdowncontent={<CommentViewer />}
 					onClick={() =>
 						updateActiveToolbarBtn({
 							id: TOOLBAR_BTNS.COMMENT,
