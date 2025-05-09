@@ -132,5 +132,10 @@
 
 .grabbing * {
 	cursor: grabbing !important;
-  user-select: none;
+	user-select: none;
+}
+
+.cursor-crosshair * {
+	cursor: crosshair !important;
+	user-select: none;
 }

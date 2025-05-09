@@ -36,8 +36,6 @@ export default function ToolBar() {
 		canvasScale,
 		cursorMode,
 		updateCursorMode,
-		updateDocumentProps,
-		documentProps,
 		undo,
 		redo,
 		canRedo,
@@ -58,8 +56,8 @@ export default function ToolBar() {
 							<p>Coming soon!</p>
 						</div>
 					}
-					onClick={() => updateActiveToolbarBtn(TOOLBAR_BTNS.ERASE)}
-					isActive={activeToolbarBtn === TOOLBAR_BTNS.ERASE}
+					onClick={onFutureFeatClick}
+					isActive={activeToolbarBtn?.id === TOOLBAR_BTNS.ERASE}
 				>
 					<div className='flex items-center gap-2'>
 						<Eraser
@@ -71,6 +69,7 @@ export default function ToolBar() {
 						<p className='text-sm pr-1'>Eraser</p>
 					</div>
 				</MultiSelector>
+
 				<MultiSelector
 					tooltip={{
 						buttonTooltipContent: 'Type',
@@ -82,8 +81,8 @@ export default function ToolBar() {
 							<p>Coming soon!</p>
 						</div>
 					}
-					onClick={() => updateActiveToolbarBtn(TOOLBAR_BTNS.TYPE)}
-					isActive={activeToolbarBtn === TOOLBAR_BTNS.TYPE}
+					onClick={() => onFutureFeatClick()}
+					isActive={activeToolbarBtn?.id === TOOLBAR_BTNS.TYPE}
 				>
 					<div className='flex items-center gap-2'>
 						<Type
@@ -107,8 +106,8 @@ export default function ToolBar() {
 							<p>Coming soon!</p>
 						</div>
 					}
-					onClick={() => updateActiveToolbarBtn(TOOLBAR_BTNS.DRAW)}
-					isActive={activeToolbarBtn === TOOLBAR_BTNS.DRAW}
+					onClick={onFutureFeatClick}
+					isActive={activeToolbarBtn?.id === TOOLBAR_BTNS.DRAW}
 				>
 					<div className='flex items-center gap-2'>
 						<PenTool
@@ -137,9 +136,14 @@ export default function ToolBar() {
 						</div>
 					}
 					onClick={() =>
-						updateActiveToolbarBtn(TOOLBAR_BTNS.HIGHLIGHT)
+						updateActiveToolbarBtn({
+							id: TOOLBAR_BTNS.HIGHLIGHT,
+							label: 'Highlight',
+							onClick: () => null,
+							hideCustomCursor: true,
+						})
 					}
-					isActive={activeToolbarBtn === TOOLBAR_BTNS.HIGHLIGHT}
+					isActive={activeToolbarBtn?.id === TOOLBAR_BTNS.HIGHLIGHT}
 				>
 					<div className='flex items-center gap-2'>
 						<Highlighter
@@ -167,10 +171,8 @@ export default function ToolBar() {
 							<p>Coming soon!</p>
 						</div>
 					}
-					onClick={() =>
-						updateActiveToolbarBtn(TOOLBAR_BTNS.UNDERLINE)
-					}
-					isActive={activeToolbarBtn === TOOLBAR_BTNS.UNDERLINE}
+					onClick={onFutureFeatClick}
+					isActive={activeToolbarBtn?.id === TOOLBAR_BTNS.UNDERLINE}
 				>
 					<div className='flex items-center gap-2'>
 						<Underline
@@ -200,11 +202,8 @@ export default function ToolBar() {
 							<p>Coming soon!</p>
 						</div>
 					}
-					onClick={() => {
-						// updateActiveToolbarBtn(TOOLBAR_BTNS.THUMBNAILS);
-						onFutureFeatClick();
-					}}
-					isActive={activeToolbarBtn === TOOLBAR_BTNS.THUMBNAILS}
+					onClick={onFutureFeatClick}
+					isActive={activeToolbarBtn?.id === TOOLBAR_BTNS.THUMBNAILS}
 				>
 					<StickyNote
 						strokeWidth={1.5}
@@ -260,13 +259,7 @@ export default function ToolBar() {
 					sideOffset={10}
 				>
 					<IconButton
-						disabled={documentProps.rotate <= -270}
-						onClick={() =>
-							updateDocumentProps((prev) => ({
-								...prev,
-								rotate: prev.rotate - 90,
-							}))
-						}
+						onClick={onFutureFeatClick}
 						className='p-2 hover:bg-[#dae1e8]'
 					>
 						<UndoDot
@@ -283,13 +276,7 @@ export default function ToolBar() {
 					sideOffset={10}
 				>
 					<IconButton
-						disabled={documentProps.rotate >= 270}
-						onClick={() =>
-							updateDocumentProps((prev) => ({
-								...prev,
-								rotate: prev.rotate + 90,
-							}))
-						}
+						onClick={onFutureFeatClick}
 						className='p-2 hover:bg-[#dae1e8]'
 					>
 						<RedoDot
@@ -410,8 +397,15 @@ export default function ToolBar() {
 							<p>Coming soon!</p>
 						</div>
 					}
-					onClick={() => updateActiveToolbarBtn(TOOLBAR_BTNS.COMMENT)}
-					isActive={activeToolbarBtn === TOOLBAR_BTNS.COMMENT}
+					onClick={() =>
+						updateActiveToolbarBtn({
+							id: TOOLBAR_BTNS.COMMENT,
+							onClick: onFutureFeatClick,
+							label: 'Add comment',
+							hideCustomCursor: true,
+						})
+					}
+					isActive={activeToolbarBtn?.id === TOOLBAR_BTNS.COMMENT}
 				>
 					<div className='flex items-center gap-2'>
 						<MessageSquareText
@@ -440,8 +434,8 @@ export default function ToolBar() {
 							<p>Coming soon!</p>
 						</div>
 					}
-					onClick={() => updateActiveToolbarBtn(TOOLBAR_BTNS.SIGN)}
-					isActive={activeToolbarBtn === TOOLBAR_BTNS.SIGN}
+					onClick={onFutureFeatClick}
+					isActive={activeToolbarBtn?.id === TOOLBAR_BTNS.SIGN}
 				>
 					<div className='flex items-center gap-2'>
 						<Signature
