@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
-import { useEffect, useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import 'react-pdf/dist/esm/Page/AnnotationLayer.css';
 import { useViewerContext } from '../layout/context';
 import { motion } from 'motion/react';
@@ -13,11 +13,20 @@ import {
 	PdfLoader,
 	Popup,
 	ScaledPosition,
+	NewHighlight,
 	Highlight,
 } from 'react-pdf-highlighter';
 
 import 'react-pdf-highlighter/dist/style.css';
-import { Highlighter } from 'lucide-react';
+import { Highlighter, MessageSquareText } from 'lucide-react';
+import {
+	Dialog,
+	DialogContent,
+	DialogDescription,
+	DialogHeader,
+	DialogTitle,
+} from '../ui/dialog';
+import { Button } from '../ui/button';
 
 const getNextId = () => String(Math.random()).slice(2);
 
@@ -34,18 +43,9 @@ export function PdfViewer() {
 	} = useViewerContext();
 
 	const url = useMemo(() => (file ? URL.createObjectURL(file) : ''), [file]);
-
-	// const handleLoadSuccess = ({ numPages }: { numPages: number }) => {
-	// 	updatePageCount(numPages);
-	// };
-
-	// const pdfViewerOptions = useMemo(
-	// 	() => ({
-	// 		cMapUrl: `https://unpkg.com/pdfjs-dist@${pdfjs.version}/cmaps/`,
-	// 		standardFontDataUrl: `https://unpkg.com/pdfjs-dist@${pdfjs.version}/standard_fonts/`,
-	// 	}),
-	// 	[]
-	// );
+	const [isCommentModalOpen, setIsCommentModalOpen] = useState(false);
+	const [incompleteHighlightProps, setIncompleteHighlightProps] =
+		useState<NewHighlight | null>(null);
 
 	const addHighlight = (highlight: any) => {
 		updateDocumentProps((prev) => ({
@@ -86,10 +86,132 @@ export function PdfViewer() {
 		comment: { text: string; emoji: string };
 	}) =>
 		comment.text ? (
-			<div className='bg-primary'>
+			<div className='bg-primary text-white py-2 px-3 rounded-md'>
 				{comment.emoji} {comment.text}
 			</div>
 		) : null;
+
+	const handleSelectionFinished = (
+		position: any,
+		content: any,
+		hideTipAndSelection: any
+	) => {
+		if (!activeToolbarBtn) return;
+
+		const isHighlight = activeToolbarBtn.id === TOOLBAR_BTNS.HIGHLIGHT;
+		const isComment = activeToolbarBtn.id === TOOLBAR_BTNS.COMMENT;
+
+		if (!isHighlight && !isComment) return;
+
+		const icon = isHighlight ? (
+			<Highlighter
+				strokeWidth={1.5}
+				style={{ width: '1.5rem', height: '1.5rem' }}
+				className='text-white/70'
+			/>
+		) : (
+			<MessageSquareText
+				strokeWidth={1.5}
+				style={{ width: '1.5rem', height: '1.5rem' }}
+				className='text-white/70'
+			/>
+		);
+
+		const label = isHighlight ? 'Highlight' : 'Add Comment';
+
+		const handleClick = () => {
+			if (isHighlight) {
+				addHighlight({
+					content,
+					position,
+					comment: {
+						emoji: '',
+						text: '',
+						color: '#ca2a30',
+					},
+				});
+			} else {
+				setIncompleteHighlightProps({
+					content,
+					position,
+					comment: {
+						emoji: '',
+						text: '',
+					},
+				});
+				setIsCommentModalOpen(true);
+			}
+			hideTipAndSelection();
+		};
+
+		return (
+			<button
+				onClick={handleClick}
+				className='px-3 py-1.5 bg-primary text-white rounded-md cursor-pointer'
+			>
+				<div className='flex items-center gap-2'>
+					{icon}
+					<p className='text-sm pr-1'>{label}</p>
+				</div>
+			</button>
+		);
+	};
+
+	const CommentDialog = ({
+		open,
+		onSubmit,
+		onClose,
+	}: {
+		open: boolean;
+		onSubmit: (value: string) => void;
+		onClose: () => void;
+	}) => {
+		const [input, updateInput] = useState('');
+
+		useEffect(() => {
+			updateInput('');
+		}, [open]);
+		return (
+			<Dialog
+				open={open}
+				onOpenChange={(e) => !e && onClose()}
+			>
+				<DialogContent>
+					<DialogHeader className='gap-1.5'>
+						<DialogTitle>New comment</DialogTitle>
+						<DialogDescription>
+							{`Add a comment for others to see`}
+						</DialogDescription>
+					</DialogHeader>
+
+					<form
+						className='w-full flex flex-col gap-[1rem]'
+						onSubmit={(e) => {
+							e.preventDefault();
+							onSubmit(input);
+						}}
+					>
+						<div className='flex'>
+							<textarea
+								onChange={(e) => updateInput(e.target.value)}
+								value={input}
+								rows={4}
+								placeholder='Type a comment..'
+								className='border w-full outline-none border-primary/30 rounded-md p-3 text-sm'
+							/>
+						</div>
+
+						<Button
+							type='submit'
+							className='w-full min-h-[2.75rem] cursor-pointer'
+						>
+							Add new comment
+						</Button>
+					</form>
+				</DialogContent>
+			</Dialog>
+		);
+	};
 
 	useEffect(() => {
 		const wrapper = document.getElementById('pdfWrapper');
@@ -201,6 +323,22 @@ export function PdfViewer() {
 		return (
 			<div className='w-full flex h-full bg-[transparent]'>
 				<CustomCursor toolbarBtn={activeToolbarBtn} />
+				<CommentDialog
+					open={isCommentModalOpen}
+					onClose={() => setIsCommentModalOpen(false)}
+					onSubmit={(e) => {
+						setIsCommentModalOpen(false);
+						addHighlight({
+							...incompleteHighlightProps,
+							comment: {
+								...incompleteHighlightProps?.comment,
+								text: e,
+							},
+						});
+
+						setIncompleteHighlightProps(null);
+					}}
+				/>
 
 				<motion.div
 					key='pdfViewer'
@@ -231,56 +369,7 @@ export function PdfViewer() {
 										// scrollToHighlightFromHash();
 									}}
 									onSelectionFinished={
-										(
-											position,
-											content,
-											hideTipAndSelection
-										) =>
-											activeToolbarBtn?.id ===
-												TOOLBAR_BTNS.HIGHLIGHT && (
-												<button
-													onClick={() => {
-														addHighlight({
-															content,
-															position,
-															comment: {
-																emoji: '',
-																text: '',
-																color: '#ca2a30',
-															},
-														});
-														hideTipAndSelection();
-													}}
-													className='px-3 py-1.5 bg-primary text-white rounded-md cursor-pointer'
-												>
-													<div className='flex items-center gap-2'>
-														<Highlighter
-															strokeWidth={1.5}
-															style={{
-																width: '1.5rem',
-																height: '1.5rem',
-															}}
-															className='text-white/70'
-														/>
-
-														<p className='text-sm pr-1'>
-															Highlight
-														</p>
-													</div>
-												</button>
-											)
-										// <Tip
-										// 	onOpen={transformSelection}
-
-										// 	onConfirm={(comment) => {
-										// 		addHighlight({
-										// 			content,
-										// 			position,
-										// 			comment,
-										// 		});
-										// 		hideTipAndSelection();
-										// 	}}
-										// />
+										handleSelectionFinished
 									}
 									highlightTransform={(
 										highlight,
@@ -348,52 +437,6 @@ export function PdfViewer() {
 								/>
 							)}
 						</PdfLoader>
-
-						{/* <Document
-							file={file}
-							options={pdfViewerOptions}
-							onLoadSuccess={handleLoadSuccess}
-							className={'relative overflow-hidden'}
-						>
-							{documentProps.elements.map(
-								({ id, pos, start, page }) =>
-									page === currentPage && (
-										<FloatingTextEditor
-											key={id}
-											pos={pos}
-											start={start}
-											onUpdate={(params) =>
-												updateDocumentProps((prev) => ({
-													...prev,
-													elements: prev.elements.map(
-														(element) => {
-															if (
-																element.id !==
-																id
-															)
-																return element;
-															return {
-																...element,
-																...params,
-															};
-														}
-													),
-												}))
-											}
-										>
-											<p>Hey</p>
-										</FloatingTextEditor>
-									)
-							)}
-							<Page
-								canvasBackground='transparent'
-								scale={canvasScale}
-								pageNumber={currentPage}
-								renderMode='canvas'
-								className={'flex items-center justify-center'}
-								rotate={documentProps.rotate}
-							/>
-						</Document> */}
 					</motion.div>
 				</motion.div>
 			</div>

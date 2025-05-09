@@ -400,7 +400,7 @@ export default function ToolBar() {
 					onClick={() =>
 						updateActiveToolbarBtn({
 							id: TOOLBAR_BTNS.COMMENT,
-							onClick: onFutureFeatClick,
+							onClick: () => null,
 							label: 'Add comment',
 							hideCustomCursor: true,
 						})
