@@ -171,13 +171,25 @@ export default function ViewerContextProvider({
 			const page = pages[highlight.position.pageNumber - 1];
 			const { x1, y1, width, height } = highlight.position.boundingRect;
 
-			page.drawRectangle({
-				x: x1,
-				y: y1,
+			console.log({
+				x1,
+				y1,
+				pageHeight: page.getHeight(),
+				pageWidth: page.getWidth(),
+				y: y1 - page.getHeight(),
+				x: page.getWidth() - x1,
 				width,
 				height,
+				extras: highlight.position,
+			});
+
+			page.drawRectangle({
+				y: y1 - page.getHeight(),
+				x: page.getWidth() - x1,
 				color: rgb(1, 1, 0),
 				opacity: 0.4,
+				width: 200,
+				height: 40,
 			});
 		});
 
