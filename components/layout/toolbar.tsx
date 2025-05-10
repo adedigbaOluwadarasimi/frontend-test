@@ -68,7 +68,7 @@ export default function ToolBar() {
 							color='#325167'
 						/>
 
-						<p className='text-sm pr-1'>Eraser</p>
+						<p className='text-sm hidden xxl:block pr-1'>Eraser</p>
 					</div>
 				</MultiSelector>
 
@@ -93,7 +93,7 @@ export default function ToolBar() {
 							color='#325167'
 						/>
 
-						<p className='text-sm pr-1'>Type</p>
+						<p className='text-sm hidden xxl:block pr-1'>Type</p>
 					</div>
 				</MultiSelector>
 
@@ -118,7 +118,7 @@ export default function ToolBar() {
 							color='#325167'
 						/>
 
-						<p className='text-sm pr-1'>Draw</p>
+						<p className='text-sm hidden xxl:block pr-1'>Draw</p>
 					</div>
 				</MultiSelector>
 			</>
@@ -150,7 +150,9 @@ export default function ToolBar() {
 							color='#325167'
 						/>
 
-						<p className='text-sm pr-1'>Highlight</p>
+						<p className='text-sm hidden xxl:block pr-1'>
+							Highlight
+						</p>
 					</div>
 				</MultiSelector>
 			</>
@@ -179,7 +181,9 @@ export default function ToolBar() {
 							color='#325167'
 						/>
 
-						<p className='text-sm pr-1'>Underline</p>
+						<p className='text-sm hidden xxl:block pr-1'>
+							Underline
+						</p>
 					</div>
 				</MultiSelector>
 			</>
@@ -188,7 +192,7 @@ export default function ToolBar() {
 
 	return (
 		<div className='h-[48px] p-[8px] flex items-center justify-between'>
-			<div className='flex items-center gap-0.5'>
+			<div className='hidden xl:flex items-center gap-0.5'>
 				<MultiSelector
 					tooltip={{
 						buttonTooltipContent: 'Thumbnails',
@@ -372,7 +376,7 @@ export default function ToolBar() {
 				</Tooltip>
 			</div>
 
-			<div className='flex items-center gap-0.5'>
+			<div className='flex ml-auto items-center gap-0.5'>
 				{activeSidebarBtn === LEFT_SIDEBAR_ENUMS.POPULAR ? (
 					<>{...Object.values(toolbarGroups)}</>
 				) : (
@@ -408,7 +412,9 @@ export default function ToolBar() {
 							color='#325167'
 						/>
 
-						<p className='text-sm pr-1'>Add Comment</p>
+						<p className='text-sm hidden xxl:block pr-1'>
+							Add Comment
+						</p>
 					</div>
 				</MultiSelector>
 

@@ -8,8 +8,8 @@ import React from 'react';
 
 export default function Header() {
 	return (
-		<div className='h-[56px] px-2 py-1 flex items-center justify-between'>
-			<div className='flex gap-3 px-3 items-center'>
+		<div className='h-[64px] md:h-[56px] px-2 py-1 flex items-center justify-between'>
+			<div className='flex gap-3 px-1.5 md:px-3 items-center'>
 				<img
 					src='/logo.svg'
 					alt=''
@@ -17,7 +17,7 @@ export default function Header() {
 				/>
 
 				<p
-					className='text-2xl font-semibold leading-normal'
+					className='text-xl md:text-2xl font-semibold leading-normal'
 					style={{ fontFamily: 'var(--font-nunito)' }}
 				>
 					pdf editor lite
@@ -26,14 +26,15 @@ export default function Header() {
 
 			<div className='px-3 flex items-center  gap-4'>
 				<Button
-					className='w-32 text-base'
+					className='w-32 hidden md:block text-base'
 					size={'lg'}
 				>
 					Share
 				</Button>
+
 				<Separator
 					orientation='vertical'
-					className='w-10 h-10 min-h-[15px] bg-[#000]'
+					className='w-10 h-10 min-h-[15px] bg-[#000] hidden md:block'
 				/>
 				<Tooltip content='Notification'>
 					<button className='cursor-pointer'>

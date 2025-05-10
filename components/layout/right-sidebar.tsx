@@ -9,7 +9,7 @@ import { useViewerContext } from './context';
 export default function RightSidebar() {
 	const { onDocumentDownload, onDocumentPrint } = useViewerContext();
 	return (
-		<div className='p-1 flex flex-col gap-3'>
+		<div className='p-1 hidden lg:flex flex-col gap-3'>
 			<Tooltip
 				content='Search'
 				side='left'
