@@ -226,7 +226,10 @@ export default function CommentViewer() {
 									comment={highlight.comment.text}
 								/>
 								{index !==
-									documentProps.highlights.length - 1 && (
+									documentProps.highlights.filter(
+										(e) => !!e.comment.text
+									).length -
+										1 && (
 									<Separator
 										orientation='horizontal'
 										className='mb-2 mt-1'
@@ -236,7 +239,8 @@ export default function CommentViewer() {
 						)
 				)}
 
-				{!documentProps.highlights.length && (
+				{!documentProps.highlights.filter((e) => !!e.comment.text)
+					.length && (
 					<div className='h-[3.5rem] pb-4 flex items-center justify-center text-sm text-muted-foreground'>
 						No comments added yet
 					</div>

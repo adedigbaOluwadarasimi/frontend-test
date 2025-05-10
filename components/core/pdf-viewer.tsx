@@ -393,7 +393,7 @@ export function PdfViewer() {
 							url={url}
 							beforeLoad={
 								<div className='w-full h-full flex items-center justify-center'>
-									<p className=''>loading</p>
+									<p className=''>Loading..</p>
 								</div>
 							}
 						>
